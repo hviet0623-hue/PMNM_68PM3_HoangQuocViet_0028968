@@ -1,7 +1,6 @@
-?php
+<?php
 class home{
     public function index(){
-        require_once '../app/views/home/index.php';
         //require_once '../app/views/home/index.php';
         require_once '../app/views/layout/masterlayout.php';
     }
@@ -9,3 +8,5 @@ class home{
         require_once '../app/views/home/login.php';
     }
 }
+
+?>
