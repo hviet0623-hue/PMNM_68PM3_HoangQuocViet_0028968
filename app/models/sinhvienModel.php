@@ -25,7 +25,7 @@
                 return false;
             }
         }
-        public function paging ($limit = 5, $offset = 0, $search = ''){
+        public function paging ($limit = 5, $offset = 0, $search = '', $sortBy = '', $sortOrder = ''){
             $limit = (int)$limit;
             $offset = (int)$offset;
             if ($limit <= 0) {
@@ -35,6 +35,17 @@
                 $offset = 0;
             }
 
+            $allowedSortBy = ['MSSV', 'HoTen', 'id'];
+            $allowedSortOrder = ['asc', 'desc'];
+            
+            $sortQuery = '';
+            if (in_array($sortBy, $allowedSortBy)) {
+                $order = in_array(strtolower($sortOrder), $allowedSortOrder) ? $sortOrder : 'asc';
+                $sortQuery = " ORDER BY sinhvien.$sortBy $order";
+            } else {
+                $sortQuery = " ORDER BY sinhvien.id ASC";
+            }
+
             if (!empty($search)) {
                 $query = "SELECT sinhvien.* FROM sinhvien 
                           LEFT JOIN lophoc ON sinhvien.MaLop = lophoc.MaLop 
@@ -42,6 +53,7 @@
                              OR sinhvien.HoTen LIKE :search 
                              OR sinhvien.MaLop LIKE :search 
                              OR lophoc.TenLop LIKE :search 
+                          $sortQuery 
                           LIMIT :limit OFFSET :offset";
                 $stmt = $this -> conn -> prepare($query);
                 $searchParam = "%$search%";
@@ -62,7 +74,7 @@
                 $countStmt -> execute();
                 $totalRecord = $countStmt -> fetchColumn();
             } else {
-                $query = "SELECT * FROM sinhvien LIMIT :limit OFFSET :offset ";
+                $query = "SELECT * FROM sinhvien $sortQuery LIMIT :limit OFFSET :offset ";
                 $stmt = $this -> conn -> prepare($query);
                 $stmt -> bindParam(':limit', $limit, PDO::PARAM_INT);
                 $stmt -> bindParam(':offset', $offset, PDO::PARAM_INT);
