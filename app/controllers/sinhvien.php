@@ -3,13 +3,16 @@
 require_once '../app/core/Controller.php';
 class sinhvien extends Controller {
     public function index($limit = 5, $offset = 0, $search = '') {
+        if (isset($_GET['search'])) {
+            $search = trim($_GET['search']);
+        }
         $sinhvienModel = $this->model('sinhvienModel');
         $result = $sinhvienModel -> paging($limit, $offset, $search);
         $sinhvien = $result['sinhvien'];
         $totalPage = $result['totalPage'];
         //trả về view 
         //require_once '../app/views/sinhvien/index.php';
-        $this -> view('sinhvien/index', ['sinhvien' => $sinhvien, 'totalPage' => $totalPage], 'Danh sách sinh viên');
+        $this -> view('sinhvien/index', ['sinhvien' => $sinhvien, 'totalPage' => $totalPage, 'search' => $search], 'Danh sách sinh viên');
     }
 
     public function create() {
