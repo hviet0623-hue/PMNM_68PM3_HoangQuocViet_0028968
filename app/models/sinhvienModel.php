@@ -12,12 +12,13 @@
             $stmt -> execute();
             return $stmt -> fetchAll(PDO::FETCH_ASSOC);
         }
-        public function create($HoTen, $GioiTinh, $MSSV) {
-            $query = "INSERT INTO sinhvien (HoTen, GioiTinh, MSSV) VALUES (:HoTen, :GioiTinh, :MSSV)";
+        public function create($HoTen, $GioiTinh, $MSSV, $MaLop = null) {
+            $query = "INSERT INTO sinhvien (HoTen, GioiTinh, MSSV, MaLop) VALUES (:HoTen, :GioiTinh, :MSSV, :MaLop)";
             $stmt = $this -> conn -> prepare($query);
             $stmt -> bindParam(':HoTen', $HoTen);
             $stmt -> bindParam(':GioiTinh', $GioiTinh);
             $stmt -> bindParam(':MSSV', $MSSV);
+            $stmt -> bindParam(':MaLop', $MaLop);
             try {
                 return $stmt -> execute();
             } catch (PDOException $e) {
@@ -58,12 +59,13 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        public function update($id, $HoTen, $GioiTinh, $MSSV) {
-            $query = "UPDATE sinhvien SET HoTen = :HoTen, GioiTinh = :GioiTinh, MSSV = :MSSV WHERE id = :id";
+        public function update($id, $HoTen, $GioiTinh, $MSSV, $MaLop = null) {
+            $query = "UPDATE sinhvien SET HoTen = :HoTen, GioiTinh = :GioiTinh, MSSV = :MSSV, MaLop = :MaLop WHERE id = :id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':HoTen', $HoTen);
             $stmt->bindParam(':GioiTinh', $GioiTinh);
             $stmt->bindParam(':MSSV', $MSSV);
+            $stmt->bindParam(':MaLop', $MaLop);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             try {
                 return $stmt->execute();
